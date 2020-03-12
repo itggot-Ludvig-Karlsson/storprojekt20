@@ -1,0 +1,22 @@
+a class="home" href="/" Home
+
+a href="highscore/index" Highscores
+
+h1 #{session[:user_id][1]}s highscore
+
+form action="/myhighscore/new" method="post"
+    input type="text" name="game" placeholder="Game"
+    input type="number" name="score" placeholder="New Highscore"
+    input type="submit" value="submit"
+
+h1 Lista
+
+- if myhighscore != nil
+    ul
+        -myhighscore.each do |item|
+            li = item["item"]
+            form action="/userhighscore/#{item["item"]}/delete" method="post" 
+                input type="submit" Delete
+            form action="/userhighscore/#{item["item"]}/edit" method="post"
+                textarea name="content" = item["item"]
+                button type="submit" Update
