@@ -22,7 +22,7 @@ post("/create") do
 
     db = SQLite3::Database.new("db/slutprojekt.db")
     password_digest = BCrypt::Password.create(password)
-    p db.execute("SELECT username FROM users")
+    db.execute("SELECT username FROM users")
 
     db.execute("INSERT INTO users(username, password) VALUES (?,?)", [username, password_digest])
 
@@ -32,17 +32,20 @@ end
 post("/login") do
     username = params["username"]
     password = params["password"]
+
     user_id =[]
+
     db = SQLite3::Database.new("db/slutprojekt.db")
     result = db.execute("SELECT userid, password FROM users WHERE username=?", [username])
+
+    if username != 
+
     user_id << result[0][0] 
     user_id << username
     password_digest = result[0][1]
-    if user_id == username
-    end
     if BCrypt::Password.new(password_digest) == password
         session[:user_id] = user_id
-        redirect("/users/home")
+        redirect("/")
     else
         redirect("/passworderror")
     end
@@ -76,17 +79,18 @@ post("/myhighscore/new") do
     redirect("/myhighscore/userhighscore")
 end
 
-post("/myhighscore/:id/delete") do
-    score = params[:userid]
+post("/userhighscore/:id/delete") do
+    h1 "Hello new world"
+    userid = params[:userid]
     db = SQLite3::Database.new("db/slutprojekt.db")
-    db.execute("DELETE FROM highscore WHERE score = ?", item) # item funkar inte gör något bra istället
+    db.execute("DELETE FROM highscore WHERE game = ?", userid) # item funkar inte gör något bra istället
     redirect("/myhighscore/userhighscore")
 end
 
 post("/myhighscore/:id/edit") do
-    item = params[:userid]
+    userid = params[:userid]
     text = params["content"]
     db = SQLite3::Database.new("db/slutprojekt.db")
-    db.execute("UPDATE highscore SET item = ? WHERE score = ?", text, item) # item funkar inte gör något bra istället
+    db.execute("UPDATE highscore SET game = ? WHERE game = ?", text, userid) # item funkar inte gör något bra istället
     redirect("/myhighscore/userhighscore")
 end
