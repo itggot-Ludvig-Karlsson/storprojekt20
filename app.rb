@@ -63,6 +63,13 @@ get("/users/home") do
     slim(:"users/home")
 end
 
+get("/myhighscore/leaderboard") do
+    db = SQLite3::Database.new("db/slutprojekt.db")
+    db.results_as_hash = true
+    all = db.execute("SELECT users.username, highscore.game, highscore.score FROM users INNER JOIN highscore ON users.userid=highscore.userid")
+    slim(:users,:highscore,locals:{users:all, highscore:all})
+end
+
 get("/myhighscore/userhighscore") do
     inloggad = session[:user_id][0]
     db = SQLite3::Database.new("db/slutprojekt.db")
@@ -79,18 +86,19 @@ post("/myhighscore/new") do
     redirect("/myhighscore/userhighscore")
 end
 
-post("/userhighscore/:id/delete") do
+post("/userhighscore/:userid/delete") do
     h1 "Hello new world"
     userid = params[:userid]
     db = SQLite3::Database.new("db/slutprojekt.db")
-    db.execute("DELETE FROM highscore WHERE game = ?", userid) # item funkar inte gör något bra istället
+    db.execute("DELETE FROM highscore WHERE game = '?'", userid)
     redirect("/myhighscore/userhighscore")
 end
 
-post("/myhighscore/:id/edit") do
+post("/myhighscore/:userid/edit") do
     userid = params[:userid]
     text = params["content"]
     db = SQLite3::Database.new("db/slutprojekt.db")
-    db.execute("UPDATE highscore SET game = ? WHERE game = ?", text, userid) # item funkar inte gör något bra istället
+    db.execute("UPDATE highscore SET game = ? WHERE game = ?", text, userid)
     redirect("/myhighscore/userhighscore")
 end
+

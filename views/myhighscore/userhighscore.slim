@@ -1,4 +1,4 @@
-a class="home" href="/" Home
+a class="home" href="/users/home" Home
 
 a href="highscore/index" Highscores
 
@@ -12,9 +12,9 @@ h1 Lista
 
 - if game != nil
     ul
-        -game.each do |item|
-            li = item["game"]
-            form action="/userhighscore/#{item["item"]}/delete" method="post" 
+        -game.each do |game|
+            li = game["game"]
+            form action="/userhighscore/#{game["game"]}/delete" method="post" 
                 input type="submit" placeholder="delete"
-            form action="/userhighscore/#{item["item"]}/edit" method="post"
+            form action="/userhighscore/#{game["game"]}/edit" method="post"
                 button type="submit" placerholder="update"
