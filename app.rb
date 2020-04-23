@@ -26,6 +26,10 @@ post("/create") do
 
     db.execute("INSERT INTO users(username, password) VALUES (?,?)", [username, password_digest])
 
+    if db.execute("SELECT username FROM users") == username
+        redirect("/errors/usernameloginerror")
+    end
+
     redirect("/")
 end
 
@@ -38,25 +42,25 @@ post("/login") do
     db = SQLite3::Database.new("db/slutprojekt.db")
     result = db.execute("SELECT userid, password FROM users WHERE username=?", [username])
 
-    if username != 
-
-    user_id << result[0][0] 
-    user_id << username
     password_digest = result[0][1]
     if BCrypt::Password.new(password_digest) == password
         session[:user_id] = user_id
         redirect("/")
     else
-        redirect("/passworderror")
+        redirect("/errors/passworderror")
     end
 end
 
-get("/passworderror") do
+get("/errors/passworderror") do
     slim(:"/passworderror")
 end
 
-get("/usernameerror") do
+get("/erros/usernameerror") do
     slim(:"/usernameerror")
+end
+
+get("/errors/usernameloginerror") do
+    slim(:"/usernameloginerror")
 end
 
 get("/users/home") do
